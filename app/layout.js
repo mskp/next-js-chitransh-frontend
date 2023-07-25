@@ -5,7 +5,6 @@ const rubik = Rubik({ subsets: ['latin'], weight: '400' })
 
 export const metadata = {
   title: 'Chitransh: AI Image Enhancer',
-  description: 'Chitransh is an AI based image enhancer',
   manifest: "/manifest.json"
 }
 

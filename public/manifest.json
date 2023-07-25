@@ -1,10 +1,10 @@
 {
     "theme_color": "#696666",
     "background_color": "#696666",
-    "display": "browser",
+    "display": "standalone",
     "scope": "/",
-    "start_url": ".",
-    "name": "Chitransh",
+    "start_url": "/",
+    "name": "Chitransh: Youtube Video Downloader",
     "short_name": "Chitransh",
     "description": "AI Image Enhancer",
     "icons": [
