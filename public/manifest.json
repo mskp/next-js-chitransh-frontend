@@ -3,7 +3,7 @@
     "background_color": "#696666",
     "display": "browser",
     "scope": "/",
-    "start_url": "/",
+    "start_url": ".",
     "name": "Chitransh",
     "short_name": "Chitransh",
     "description": "AI Image Enhancer",
