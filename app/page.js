@@ -10,6 +10,7 @@ export default function Home() {
 
   const handleImageUpload = async (event) => {
     event.preventDefault();
+    if (!event.target.image?.files[0]) return
 
     setProcessedImage(null);
     const image = event.target.image.files[0];
@@ -71,12 +72,14 @@ export default function Home() {
             accept="image/*"
             className="mb-5 p-2 block w-full text-sm text-white border border-black bg-slate-700 rounded-lg cursor-pointer"
           />
-          <Button
-            onClick={handleImageUpload}
+          <button
+            type="submit"
+            style={{ background: "#1a4940" }}
             disabled={loading}
-            loading={loading}
-            text="Upload"
-          />
+            className="hover:opacity-80 text-white py-2 px-4 rounded disabled:opacity-50 cursor-not-allowed"
+          >
+            {loading ? "Uploading..." : "Upload"}
+          </button>
         </form>
       </div>
       <div className="flex flex-col md:flex-row justify-center mt-4">
@@ -92,20 +95,13 @@ export default function Home() {
             </div>
           )}
           {processedImage && (
-            <div>
-              <h3 className="text-xl mb-2 text-center">Enhanced Image</h3>
-              <img
-                src={processedImage}
-                className="w-full h-auto max-h-96 mb-2"
-                alt="Processed"
-              />
-              <Button
-                onClick={downloadFile}
-                disabled={beingDownloaded}
-                loading={beingDownloaded}
-                text={beingDownloaded ? "Downloading" : "Download"}
-              />
-            </div>
+            <button
+              onClick={downloadFile}
+              style={{ background: "#1a4940" }}
+              className="hover:opacity-80 text-white py-2 px-4 rounded"
+            >
+              {beingDownloaded ? "Downloading..." : "Download"}
+            </button>
           )}
         </div>
       </div>
@@ -113,14 +109,15 @@ export default function Home() {
   );
 }
 
-const Button = ({ onClick, disabled, text, loading }) => (
-  <button
-    onClick={onClick}
-    style={{ background: "#1a4940" }}
-    disabled={disabled}
-    className={`hover:opacity-80 text-white py-2 px-4 rounded ${disabled || loading ? 'cursor-not-allowed' : 'cursor-pointer'
-      }`}
-  >
-    {loading ? `${text}...` : text}
-  </button>
-);
+// const Button = ({ onClick, disabled, text, loading }) => (
+//   <button
+//     onClick={onClick}
+//     style={{ background: "#1a4940" }}
+//     disabled={disabled}
+//     className={`hover:opacity-80 text-white py-2 px-4 rounded ${
+//       disabled || loading ? 'cursor-not-allowed' : 'cursor-pointer'
+//     }`}
+//   >
+//     {loading ? `${text}...` : text}
+//   </button>
+// );
