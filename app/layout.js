@@ -1,7 +1,8 @@
 import './globals.css'
-import { Rubik } from 'next/font/google'
+import { Poppins } from 'next/font/google'
+import Header from "@/components/Header/Header"
 
-const rubik = Rubik({ subsets: ['latin'], weight: '400' })
+const poppins = Poppins({ subsets: ['latin'], weight: '200' })
 
 export const metadata = {
   title: 'Chitransh: AI Image Enhancer',
@@ -11,7 +12,10 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${rubik.className} bg-gray-900 text-white`}>{children}</body>
+      <body className={`${poppins.className} bg-gray-900 text-white`}>
+        <Header/> 
+        {children}
+      </body>
     </html>
   )
 }

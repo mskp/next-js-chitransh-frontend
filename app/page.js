@@ -3,25 +3,21 @@
 import React, { useState } from "react";
 
 export default function Home() {
-  const [uploadedImage, setUploadedImage] = useState(null);
   const [processedImage, setProcessedImage] = useState(null);
-  const [loadingBefore, setLoadingBefore] = useState(false);
-  const [loadingAfter, setLoadingAfter] = useState(false);
-  const [beingDownloaded, setbeingDownloaded] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [beingDownloaded, setBeingDownloaded] = useState(false);
   const API_HOST = process.env.NEXT_PUBLIC_API_HOST;
 
   const handleImageUpload = async (event) => {
     event.preventDefault();
 
-    setUploadedImage(null);
     setProcessedImage(null);
     const image = event.target.image.files[0];
 
     const formData = new FormData();
     formData.append("image", image);
 
-    setLoadingBefore(true);
-    setLoadingAfter(true);
+    setLoading(true);
 
     try {
       const response = await fetch(API_HOST, {
@@ -31,29 +27,20 @@ export default function Home() {
 
       const data = await response.json();
 
-      // Hide loading spinners
-      setLoadingBefore(false);
-      setLoadingAfter(false);
+      setLoading(false);
 
       if (data.uploadedImage && data.processedImage) {
-        if (image) {
-          const reader = new FileReader();
-          reader.onloadend = () => setUploadedImage(reader.result);
-          reader.readAsDataURL(image);
-        }
         setProcessedImage(data.processedImage);
       }
     } catch (error) {
-      setLoadingBefore(false);
-      setLoadingAfter(false);
+      setLoading(false);
       console.error(error);
     }
   };
 
-  const downloadFile = async (e) => {
+  const downloadFile = async () => {
     try {
-      // e.preventDefault();
-      setbeingDownloaded(true);
+      setBeingDownloaded(true);
       const response = await fetch(
         `${API_HOST}/download/${encodeURIComponent(processedImage)}`
       );
@@ -63,7 +50,7 @@ export default function Home() {
       link.href = url;
       link.download = `chitransh-${Date.now()}-cowed.png`;
       link.click();
-      setbeingDownloaded(false);
+      setBeingDownloaded(false);
       window.URL.revokeObjectURL(url);
     } catch (error) {
       console.error("Error downloading the file:", error);
@@ -72,9 +59,6 @@ export default function Home() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl mb-4 text-center">
-        Chitransh: AI Image Enhancer🐮
-      </h1>
       <div className="flex justify-center">
         <form
           onSubmit={handleImageUpload}
@@ -85,62 +69,58 @@ export default function Home() {
             type="file"
             name="image"
             accept="image/*"
-            className="mb-2 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50"
-            required
+            className="mb-5 p-2 block w-full text-sm text-white border border-black bg-slate-700 rounded-lg cursor-pointer"
           />
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          >
-            Upload
-          </button>
+          <Button
+            onClick={handleImageUpload}
+            disabled={loading}
+            loading={loading}
+            text="Upload"
+          />
         </form>
       </div>
-      <div className="flex justify-between mt-4">
-        <div className="w-1/2 pr-2 flex flex-col items-center">
-          {loadingBefore && (
-            <div>
-              <h3 className="text-xl mb-2 text-center">Before:</h3>
-              <div className="loader"></div>
-            </div>
-          )}
-          {uploadedImage && (
-            <div>
-              <h3 className="text-xl mb-2 text-center">Before:</h3>
-              <img
-                src={uploadedImage}
-                className="max-w-full h-auto max-h-96 mb-2"
-              />
-            </div>
-          )}
-        </div>
-        <div className="w-1/2 pl-2 flex flex-col items-center">
-          {loadingAfter && (
-            <div>
-              <h3 className="text-xl mb-2 text-center">After:</h3>
-              <div className="loader"></div>
-            </div>
-          )}
+      <div className="flex flex-col md:flex-row justify-center mt-4">
+        <div className="w-full md:w-1/2 lg:pl-2 flex flex-col items-center mt-4 md:mt-0">
           {processedImage && (
             <div>
-              <h3 className="text-xl mb-2 text-center">After:</h3>
+              <h3 className="text-xl mb-2 text-center">Enhanced Image</h3>
               <img
                 src={processedImage}
-                className="max-w-full h-auto max-h-96 mb-2"
+                className="w-full h-auto max-h-96 mb-2"
+                alt="Processed"
               />
             </div>
           )}
           {processedImage && (
-            <button
-              onClick={downloadFile}
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              {beingDownloaded && <div className="loader"></div>}
-              {!beingDownloaded && "Download"}
-            </button>
+            <div>
+              <h3 className="text-xl mb-2 text-center">Enhanced Image</h3>
+              <img
+                src={processedImage}
+                className="w-full h-auto max-h-96 mb-2"
+                alt="Processed"
+              />
+              <Button
+                onClick={downloadFile}
+                disabled={beingDownloaded}
+                loading={beingDownloaded}
+                text={beingDownloaded ? "Downloading" : "Download"}
+              />
+            </div>
           )}
         </div>
       </div>
     </div>
   );
 }
+
+const Button = ({ onClick, disabled, text, loading }) => (
+  <button
+    onClick={onClick}
+    style={{ background: "#1a4940" }}
+    disabled={disabled}
+    className={`hover:opacity-80 text-white py-2 px-4 rounded ${disabled || loading ? 'cursor-not-allowed' : 'cursor-pointer'
+      }`}
+  >
+    {loading ? `${text}...` : text}
+  </button>
+);
