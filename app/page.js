@@ -82,27 +82,36 @@ export default function Home() {
           </button>
         </form>
       </div>
+
       <div className="flex flex-col md:flex-row justify-center mt-4">
         <div className="w-full md:w-1/2 lg:pl-2 flex flex-col items-center mt-4 md:mt-0">
-          {processedImage && (
-            <div>
-              <h3 className="text-xl mb-2 text-center">Enhanced Image</h3>
-              <img
-                src={processedImage}
-                className="w-full h-auto max-h-96 mb-2"
-                alt="Processed"
-              />
-            </div>
-          )}
-          {processedImage && (
-            <button
-              onClick={downloadFile}
-              style={{ background: "#1a4940" }}
-              className="hover:opacity-80 text-white py-2 px-4 rounded"
-            >
-              {beingDownloaded ? "Downloading..." : "Download"}
-            </button>
-          )}
+          {loading ? <div className="lds-roller mt-5">
+            {new Array(8).fill().map((_, i) => (
+              <div key={i}></div>
+            ))}
+          </div> :
+            <>
+              {processedImage && (
+                <div>
+                  <h3 className="text-xl mb-2 text-center">Enhanced Image</h3>
+                  <img
+                    src={processedImage}
+                    className="w-full h-auto max-h-96 mb-2"
+                    alt="Processed"
+                  />
+                </div>
+              )}
+              {processedImage && (
+                <button
+                  onClick={downloadFile}
+                  style={{ background: "#1a4940" }}
+                  className="hover:opacity-80 text-white py-2 px-4 rounded"
+                >
+                  {beingDownloaded ? "Downloading..." : "Download"}
+                </button>
+              )}
+            </>
+          }
         </div>
       </div>
     </div>
