@@ -76,7 +76,7 @@ export default function Home() {
             type="submit"
             style={{ background: "#1a4940" }}
             disabled={loading}
-            className="hover:opacity-80 text-white py-2 px-4 rounded disabled:opacity-50 cursor-not-allowed"
+            className="hover:opacity-80 text-white py-2 px-4 rounded disabled:opacity-50 cursor-not-allowed font-semibold"
           >
             {loading ? "Uploading..." : "Upload"}
           </button>
